@@ -7,24 +7,31 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState("");   // ✅ track error messages
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // clear previous errors
     const result = await signup(name, email, password);
+
     if (result?.token) {
-      navigate("/dashboard"); 
-    } 
-    else {
-      setError("Signup failed: " + (result?.message || "User already exists"));
+      navigate("/dashboard");
+    } else {
+      setError("User already exists"); // ✅ properly handle error
     }
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded shadow-md w-96"
+      >
         <h2 className="text-2xl font-bold mb-4">Signup</h2>
+        {error && (
+          <p className="text-red-500 mb-3 text-sm">{error}</p>  
+        )}
         <input
           type="text"
           placeholder="Name"
@@ -46,7 +53,9 @@ const Signup = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className="bg-green-500 text-white w-full py-2 rounded">Signup</button>
+        <button className="bg-green-500 text-white w-full py-2 rounded">
+          Signup
+        </button>
       </form>
     </div>
   );

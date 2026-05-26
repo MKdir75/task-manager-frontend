@@ -11,17 +11,24 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await login(email, password);
-    if (result?.token) {
-      navigate("/dashboard");
-    } else {
-      setError("Login failed: " + (result?.message || "Invalid credentials"));
+    try {
+      const result = await login(email, password);
+      if (result?.token) {
+        navigate("/dashboard");
+      } else {
+        setError("Invalid credentials");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded shadow-md w-96"
+      >
         <h2 className="text-2xl font-bold mb-4">Login</h2>
         {error && <p className="text-red-500 mb-3">{error}</p>}
         <input
@@ -30,6 +37,7 @@ const Login = () => {
           className="w-full p-2 border mb-3"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
@@ -37,8 +45,14 @@ const Login = () => {
           className="w-full p-2 border mb-3"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <button className="bg-blue-500 text-white w-full py-2 rounded">Login</button>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600"
+        >
+          Login
+        </button>
       </form>
     </div>
   );
